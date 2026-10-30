@@ -1,0 +1,225 @@
+{
+  "title": "RAMSES monitor",
+  "description": "State of every SEFA service as reported by sefa-probe. HTTP counters are cumulative since the instance started: compute rates from the difference between two consecutive /monitor calls.",
+  "type": "object",
+  "required": [
+    "timestamp",
+    "services"
+  ],
+  "properties": {
+    "timestamp": {
+      "description": "When the interface collected this data (UTC, ISO 8601)",
+      "type": "string"
+    },
+    "services": {
+      "description": "Keyed by service id, e.g. ORDERING-SERVICE",
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "serviceId",
+          "currentImplementationId",
+          "instances",
+          "snapshot",
+          "instanceConfig"
+        ],
+        "properties": {
+          "serviceId": {
+            "type": "string"
+          },
+          "currentImplementationId": {
+            "description": "e.g. ordering-service, or payment-proxy-1-service",
+            "type": "string"
+          },
+          "instances": {
+            "description": "Instance ids, formatted <implementation>@<host>:<port>",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "snapshot": {
+            "description": "Latest metrics snapshot per instance; null if the probe call failed",
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "object",
+              "properties": {
+                "serviceId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "instanceId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "status": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "BOOTING",
+                    "ACTIVE",
+                    "UNREACHABLE",
+                    "FAILED",
+                    "SHUTDOWN",
+                    null
+                  ]
+                },
+                "circuitBreakerMetrics": {
+                  "description": "Keyed by circuit breaker name (e.g. payment, delivery)",
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "httpMetrics": {
+                  "description": "Keyed by <METHOD>@<endpoint>. Fields the probe could not read are null.",
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "endpoint": {
+                        "type": "string"
+                      },
+                      "httpMethod": {
+                        "type": "string"
+                      },
+                      "outcomeMetrics": {
+                        "description": "Keyed by outcome (SUCCESS, CLIENT_ERROR, SERVER_ERROR, ...). RAMSES counts status < 500 as successful.",
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "outcome": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "integer"
+                            },
+                            "count": {
+                              "description": "Cumulative number of requests",
+                              "type": "integer"
+                            },
+                            "totalDuration": {
+                              "description": "Cumulative duration in ms",
+                              "type": "number"
+                            },
+                            "maxDuration": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "cpuUsage": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "diskTotalSpace": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "diskFreeSpace": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "timestamp": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "active": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "shutdown": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "failed": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "unreachable": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "booting": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "instanceConfig": {
+            "description": "Current configuration of the service; null if the probe call failed",
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "serviceId": {
+                "type": "string"
+              },
+              "timestamp": {
+                "type": "string"
+              },
+              "loadBalancerWeights": {
+                "description": "Keyed by instance id; null when no weights are set (all instances get an equal share)",
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "additionalProperties": {
+                  "type": "number"
+                }
+              },
+              "loadBalancerType": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "circuitBreakersConfiguration": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

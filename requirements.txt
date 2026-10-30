@@ -1,0 +1,11 @@
+# UPISAS (UPISAS/requirements.txt)
+requests~=2.31.0
+docker~=6.1.3
+jsonschema~=4.19.1
+rich~=13.6.0
+# interface/api.py
+flask>=3.0
+# UPISAS/UPISAS/strategies/ramses_strategy.py (same solver RAMSES's plan uses)
+ortools>=9.10
+# UPISAS/compare.py --plot (optional)
+matplotlib>=3.8

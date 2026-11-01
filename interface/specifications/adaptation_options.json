@@ -1,0 +1,31 @@
+{
+  "addInstances": {
+    "description": "Start new instances of a service implementation (sefa-instances-manager). New instances share the load equally as long as no per-instance weights are set.",
+    "parameters": {
+      "serviceImplementationName": {"type": "string", "description": "Implementation id, e.g. ordering-service"},
+      "numberOfInstances": {"type": "integer", "description": "How many instances to add"}
+    }
+  },
+  "removeInstance": {
+    "description": "Stop one instance (sefa-instances-manager). Take address and port from its instance id <implementation>@<address>:<port>.",
+    "parameters": {
+      "serviceImplementationName": {"type": "string", "description": "Implementation id, e.g. ordering-service"},
+      "address": {"type": "string", "description": "Container name, e.g. sefa-ordering-service-36057"},
+      "port": {"type": "integer", "description": "Port inside the Docker network, e.g. 36057"}
+    }
+  },
+  "changeLBWeights": {
+    "description": "Set load balancer weights of a service's instances (sefa-config-manager, commits to the config repo). Weights should sum to 1; an instance without a weight gets no traffic once any weight is set.",
+    "parameters": {
+      "serviceId": {"type": "string", "description": "Service id, e.g. ORDERING-SERVICE"},
+      "newWeights": {"type": "object", "description": "Instance id -> weight, e.g. {\"ordering-service@sefa-ordering-service:58086\": 0.5}"},
+      "instancesToRemoveWeightOf": {"type": "array", "description": "Instance ids whose weight entry should be deleted"}
+    }
+  },
+  "changeProperty": {
+    "description": "Change properties in the config repo (sefa-config-manager), e.g. circuit breaker settings in ordering-service.properties.",
+    "parameters": {
+      "propertiesToChange": {"type": "array", "description": "List of {serviceName, propertyName, value}. serviceName null means application.properties; value null removes the property."}
+    }
+  }
+}

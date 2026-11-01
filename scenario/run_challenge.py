@@ -15,6 +15,6 @@ while time.monotonic() - start < 240:
             strategy.execute(strategy.knowledge.plan_data, with_validation=False)
     except Exception as e:
         print(e)
-    time.sleep(5)
+    time.sleep(5 - (time.monotonic() - start) % 5)
 
 exemplar.stop_container()

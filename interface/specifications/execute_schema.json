@@ -1,0 +1,68 @@
+{
+  "type": "object",
+  "required": ["operation", "parameters"],
+  "properties": {
+    "operation": {
+      "type": "string",
+      "enum": ["addInstances", "removeInstance", "changeLBWeights", "changeProperty"]
+    },
+    "parameters": {
+      "description": "Body sent to the actuator; see /adaptation_options for each operation's parameters",
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"operation": {"const": "addInstances"}}},
+      "then": {"properties": {"parameters": {
+        "required": ["serviceImplementationName", "numberOfInstances"],
+        "properties": {
+          "serviceImplementationName": {"type": "string"},
+          "numberOfInstances": {"type": "integer", "minimum": 1}
+        }
+      }}}
+    },
+    {
+      "if": {"properties": {"operation": {"const": "removeInstance"}}},
+      "then": {"properties": {"parameters": {
+        "required": ["serviceImplementationName", "address", "port"],
+        "properties": {
+          "serviceImplementationName": {"type": "string"},
+          "address": {"type": "string"},
+          "port": {"type": "integer"}
+        }
+      }}}
+    },
+    {
+      "if": {"properties": {"operation": {"const": "changeLBWeights"}}},
+      "then": {"properties": {"parameters": {
+        "required": ["serviceId", "newWeights", "instancesToRemoveWeightOf"],
+        "properties": {
+          "serviceId": {"type": "string"},
+          "newWeights": {"type": ["object", "null"], "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}},
+          "instancesToRemoveWeightOf": {"type": "array", "items": {"type": "string"}}
+        }
+      }}}
+    },
+    {
+      "if": {"properties": {"operation": {"const": "changeProperty"}}},
+      "then": {"properties": {"parameters": {
+        "required": ["propertiesToChange"],
+        "properties": {
+          "propertiesToChange": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["serviceName", "propertyName", "value"],
+              "properties": {
+                "serviceName": {"type": ["string", "null"]},
+                "propertyName": {"type": "string"},
+                "value": {"type": ["string", "null"]}
+              }
+            }
+          }
+        }
+      }}}
+    }
+  ]
+}

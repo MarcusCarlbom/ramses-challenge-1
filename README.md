@@ -124,12 +124,9 @@ source .venv/bin/activate
 pip install -r requirements.txt flask
 ```
 
-In your UPISAS clone, you need three files of your own and one you can copy.
+In your UPISAS clone, you need two files of your own and two you can copy.
 
-**`interface.py`** is a small web server on port 50000 that UPISAS talks to, with two endpoints.
-
-- `GET /monitor` returns `GET localhost:55010/rest/systemArchitecture` and `GET localhost:55010/rest/service/<name>/snapshot` for each service.
-- `PUT /execute` sends the adaptation to `POST localhost:55011/rest/addInstances`.
+**`interface/`** connects UPISAS to RAMSES. Copy the [`interface` folder](https://github.com/MarcusCarlbom/ramses-challenge-1/tree/main/interface). `GET /monitor` returns the state of RAMSES, and `PUT /execute` sends your adaptation. `GET /adaptation_options` lists what you can send.
 
 **`UPISAS/exemplars/ramses.py`** points UPISAS at `http://localhost:50000` and starts the scenario with these settings. Download the image first with `docker pull`, and use your own architecture in its name.
 
@@ -150,15 +147,14 @@ docker_config = {
 **`run_challenge.py`** runs your strategy. Copy [`run_challenge.py`](https://github.com/MarcusCarlbom/ramses-challenge-1/blob/main/scenario/run_challenge.py), then run these in separate terminals.
 
 ```bash
-python interface.py
+python interface/interface.py
 python run_challenge.py
 ```
 
 ## What to submit
 
-Commit your three files to your own repository and submit the commit link.
+Commit the two files you created to your repository and submit the commit link.
 
-- `interface.py`
 - `UPISAS/exemplars/ramses.py`
 - `UPISAS/strategies/my_strategy.py`
 

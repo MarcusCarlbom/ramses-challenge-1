@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "required": ["addInstances", "removeInstance", "changeLBWeights", "changeProperty"],
+  "properties": {
+    "addInstances": {"$ref": "#/$defs/operation"},
+    "removeInstance": {"$ref": "#/$defs/operation"},
+    "changeLBWeights": {"$ref": "#/$defs/operation"},
+    "changeProperty": {"$ref": "#/$defs/operation"}
+  },
+  "$defs": {
+    "operation": {
+      "type": "object",
+      "required": ["description", "parameters"],
+      "properties": {
+        "description": {"type": "string"},
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["type", "description"],
+            "properties": {
+              "type": {"type": "string"},
+              "description": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  }
+}
